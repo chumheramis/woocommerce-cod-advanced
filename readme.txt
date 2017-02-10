@@ -108,3 +108,12 @@ Cash On Delivery - advanced options like hide COD payment while checkout if mini
 
 = 1.2.4 =
 * Added COD extra charge Message so user can change message as per they want.
+
+= 1.2.5 =
+* Notice: Undefined variable: zone_fields in ......... woocommerce_advanced_cod.php on line 159 -- ERROR Solved
+
+= 1.2.6 =
+* Localization added.
+
+= 1.2.7 =
+* Localization added method changed.

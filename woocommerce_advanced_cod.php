@@ -4,7 +4,7 @@ Plugin Name: WooCommerce COD Advanced
 Plugin URI: http://aheadzen.com/
 Description: Cash On Delivery Advanced - Added advanced options like hide COD payment while checkout if minimum amount, enable extra charges if minimum amount.
 Author: Aheadzen Team 
-Version: 1.2.4
+Version: 1.2.7
 Author URI: http://aheadzen.com/
 
 Copyright: © 2014-2015 ASK-ORACLE.COM
@@ -21,16 +21,23 @@ class WooCommerceCODAdvanced{
 		add_action('woocommerce_settings_api_form_fields_cod',array($this,'adv_cod_woocommerce_update_options_payment_gateways_cod_fun'));
 		add_filter('woocommerce_available_payment_gateways',array($this,'adv_cod_filter_gateways'));
 		//add_action( 'woocommerce_calculate_totals', array($this,'adv_cod_calculate_totals'), 9, 1 );
-		add_action( 'wp_head', array($this,'adv_cod_wp_header'), 99 );
-		add_filter( 'woocommerce_gateway_icon', array($this,'adv_cod_gateway_icon'),9,2);
+		add_action('wp_head',array($this,'adv_cod_wp_header'), 99 );
+		add_filter('woocommerce_gateway_icon',array($this,'adv_cod_gateway_icon'),9,2);
 		
-		add_action( 'woocommerce_cart_calculate_fees', array( &$this, 'woo_add_extra_fee') );
+		add_action('woocommerce_cart_calculate_fees',array( &$this, 'woo_add_extra_fee'));
+		
+		add_action('init',array($this,'az_woocod_init'));
 		
 		global $woocommerce;
 		if(isset($_POST['action']) && $_POST['action'] == 'woocommerce_update_order_review'){
 			add_filter('woocommerce_available_payment_gateways',array($this,'adv_cod_filter_gateways'));	
 		}	
     }
+	
+	
+	function az_woocod_init(){
+		load_plugin_textdomain('askoracle', false, basename( dirname( __FILE__ ) ) . '/languages');
+	}
 	
 	/****************************
 	COD header
@@ -155,7 +162,7 @@ class WooCommerceCODAdvanced{
 		
 		/**Country**/
 		$country_arr = array();
-			if ( $allowed_countries ) {
+			if ( $allowed_countries && $zone_fields && $zone_fields['zone_country']) {
 			$selections = explode(',', $zone_fields['zone_country']);
 			foreach ( $allowed_countries as $key => $val ) {
 				//echo '<option value="'.$key.'" ' . selected( in_array( $key, $selections ), true, false ).'>' . $val . '</option>';
